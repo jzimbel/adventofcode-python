@@ -38,3 +38,7 @@ def test_run() -> None:
   # not yet implemented!
   assert run('') == (None, None)
 """.format(SOLUTIONS_DIR_NAME, YEAR_PREFIX, DAY_PREFIX)
+
+# for highlighting answers
+MARK = '\033[1;32m'
+END_MARK = '\033[0m'

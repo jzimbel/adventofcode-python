@@ -8,7 +8,11 @@ from adventofcode.constants import (
   PROJECT_ROOT,
   SOLUTIONS_DIR_NAME,
   COMMAND_RUN_SOLUTION,
-  COMMAND_MAKE_NEW_YEAR
+  COMMAND_MAKE_NEW_YEAR,
+  YEAR_PREFIX,
+  DAY_PREFIX,
+  MARK,
+  END_MARK
 )
 from adventofcode.util.get_input import get_input
 from adventofcode.util.make_new_year import make_new_year
@@ -19,9 +23,16 @@ def run_solution(args) -> None:
   if year is None:
     today = date.today()
     year = today.year if today.month == 12 else (today.year - 1)
-  # solution_module_path = 
-  # solution_module = importlib.import_module()
-  # solution_module.run(get_input(year, day))
+  solution_module_path = 'adventofcode.solutions.{}{}.{}{}.solution'.format(YEAR_PREFIX, year, DAY_PREFIX, str(day).zfill(2))
+  solution_module = importlib.import_module(solution_module_path)
+  answer1, answer2 = solution_module.run(get_input(year, day))
+  print()
+  print('-' * 50)
+  print('-' * 50)
+  print('Solutions found.')
+  print()
+  print('Answer to problem 1:', '{}{}{}'.format(MARK, answer1, END_MARK))
+  print('Answer to problem 2:', '{}{}{}'.format(MARK, answer2, END_MARK))
 
 def run_make_new_year(args) -> None:
   year = args.year
