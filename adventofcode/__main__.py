@@ -1,7 +1,6 @@
 import argparse
 from datetime import date
 import os
-import re
 import importlib
 from adventofcode.constants import (
   PROJECT_ROOT,
