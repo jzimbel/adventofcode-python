@@ -19,7 +19,7 @@ To set up solution and test directories for a new year of puzzles, run
 ```sh
 python -m adventofcode init [-y <year>]
 ```
-The year param is optional in both of the `adventofcode` commands, and if not specified the latest year listed in the solutions directory (or latest year + 1 for `init`) is used.
+The year param is optional in both of the `adventofcode` commands, and if not specified the latest year listed in the solutions directory (or latest year + 1 for `init`) is used.  
 Note: this command's output will be nicer if you have the `tree` shell command installed!
 
 ## Test it
