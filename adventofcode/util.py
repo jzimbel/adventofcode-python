@@ -1,3 +1,6 @@
+import shutil
+import subprocess
+import sys
 import os
 from typing import Optional
 from adventofcode.constants import (
@@ -93,12 +96,21 @@ def make_new_year(year: int) -> None:
     tests_day_dir_path = os.path.join(tests_year_dir_path, day_dir)
     os.mkdir(tests_day_dir_path)
     # test file names must be unique for pytest to run them correctly
-    test_file_path = os.path.join(tests_day_dir_path, 'test_{}_{}_{}'.format(year, day, SOLUTION_FILE_NAME))
+    test_file_path = os.path.join(tests_day_dir_path, 'test_{}_{}_{}'.format(year, pad_day(day), SOLUTION_FILE_NAME))
     with open(test_file_path, 'x') as test_file:
       test_file.write(
         TEST_FILE_TEMPLATE.format(day=day, year=year, zero_padded_day=pad_day(day), test_file_path=test_file_path)
       )
 
   print(highlight('Success.'))
-  print('Created {} and subdirectories + starter solution files.'.format(highlight(year_dir_path)))
-  print('Also created test directory {}.'.format(highlight(tests_year_dir_path)))
+  if shutil.which('tree') is not None:
+    print('Created the following directory trees:')
+    solutions_tree = subprocess.check_output(['tree', '-C', '--noreport', year_dir_path]).decode('utf8')
+    tests_tree = subprocess.check_output(['tree', '-C', '--noreport', tests_year_dir_path]).decode('utf8')
+    print(solutions_tree)
+    print('-' * 50)
+    print()
+    print(tests_tree)
+  else:
+    print('Created {} and subdirectories + starter solution files.'.format(highlight(year_dir_path)))
+    print('Also created test directory {}.'.format(highlight(tests_year_dir_path)))
