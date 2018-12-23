@@ -7,8 +7,10 @@ This project holds my solutions + utilities for **[Advent of Code](https://adven
 To run solutions and utilities, first you must install dependencies. I highly recommend using a virtual environment for this. I've been using `pipenv` for that lately.
 ```sh
 pipenv install
+# start a new shell within the virtualenv. The shell (and virtualenv) can be exited normally, with `exit` or Ctrl-D.
+pipenv shell
 ```
-Once that's done, you can run solutions (while your virtualenv is activate) like so:
+Once that's done, you can run solutions like so:
 ```sh
 python -m adventofcode run [-y <year>] <day>
 ```
