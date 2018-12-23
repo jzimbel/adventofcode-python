@@ -8,10 +8,18 @@ To run solutions and utilities, first you must install dependencies. I highly re
 ```sh
 pipenv install
 ```
-Once that's done, you can run solutions like so:
+Once that's done, you can run solutions (while your virtualenv is activate) like so:
 ```sh
 python -m adventofcode run [-y <year>] <day>
 ```
+
+---
+
+To set up a solution and test directories for a new year of puzzles, run
+```sh
+python -m adventofcode init [-y <year>]
+```
+The year param is optional in both of the `adventofcode` commands, and if not specified the latest year listed in the solutions directory (or latest year + 1 for `init`) is used.
 
 ## Test it
 

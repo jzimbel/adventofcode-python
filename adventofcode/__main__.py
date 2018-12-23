@@ -1,6 +1,5 @@
 import argparse
 from datetime import date
-from typing import Optional
 import os
 import re
 import importlib
@@ -10,50 +9,40 @@ from adventofcode.constants import (
   COMMAND_RUN_SOLUTION,
   COMMAND_MAKE_NEW_YEAR,
   YEAR_PREFIX,
-  DAY_PREFIX,
-  MARK,
-  END_MARK
+  DAY_PREFIX
 )
-from adventofcode.util.get_input import get_input
-from adventofcode.util.make_new_year import make_new_year
+from adventofcode.util import (
+  get_day_dir,
+  get_input,
+  get_latest_year,
+  get_year_dir,
+  highlight,
+  make_new_year,
+  pad_day
+)
 
 def run_solution(args) -> None:
   year = args.year
   day = args.day
   if year is None:
-    today = date.today()
-    year = today.year if today.month == 12 else (today.year - 1)
-  solution_module_path = 'adventofcode.solutions.{}{}.{}{}.solution'.format(YEAR_PREFIX, year, DAY_PREFIX, str(day).zfill(2))
+    year = get_latest_year()
+  solution_module_path = 'adventofcode.solutions.{}.{}.solution'.format(get_year_dir(year), get_day_dir(day))
   solution_module = importlib.import_module(solution_module_path)
   answer1, answer2 = solution_module.run(get_input(year, day))
   print()
   print('-' * 50)
   print('-' * 50)
-  print('Solutions found.')
+  print(highlight('Solutions found.'))
   print()
-  print('Answer to problem 1:', '{}{}{}'.format(MARK, answer1, END_MARK))
-  print('Answer to problem 2:', '{}{}{}'.format(MARK, answer2, END_MARK))
+  print('Answer to problem 1:', highlight(answer1))
+  print('Answer to problem 2:', highlight(answer2))
 
 def run_make_new_year(args) -> None:
   year = args.year
   if year is None:
-    year = get_default_year_for_make()
+    latest_year = get_latest_year()
+    year = date.today().year if latest_year is None else (latest_year + 1)
   make_new_year(year)
-
-def get_default_year_for_make() -> int:
-  '''
-  Search the solutions directory for the latest year, and return the one after that.
-  Returns current year if directory is empty.
-  '''
-  solutions_dir_path = os.path.join(PROJECT_ROOT, SOLUTIONS_DIR_NAME)
-  try:
-    return max(
-      int(entry[1:])
-      for entry in os.listdir(solutions_dir_path)
-      if re.fullmatch(r'y\d+', entry)
-    ) + 1
-  except ValueError:
-    return date.today().year
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(prog='python -m adventofcode', description='Run Advent of Code solutions and related utilities.')
