@@ -7,12 +7,10 @@ from typing import Optional
 from adventofcode.constants import (
   DAY_PREFIX,
   END_MARK,
-  INPUT_FILE_NAME,
+  INPUTS_ROOT,
   MARK,
-  PROJECT_ROOT,
-  SOLUTION_FILE_NAME,
   SOLUTION_FILE_TEMPLATE,
-  SOLUTIONS_DIR_NAME,
+  SOLUTIONS_ROOT,
   TEST_FILE_TEMPLATE,
   TESTS_ROOT,
   YEAR_PREFIX
@@ -24,15 +22,21 @@ def pad_day(day: int) -> str:
   '''
   return str(day).zfill(2)
 
-def get_day_dir(day: int) -> str:
+def get_day_id(day: int) -> str:
   '''
-  Gets the day directory name for a given day number.
+  Gets the day identifier for a given day number.
+
+  >>> get_day_id(5)
+  'd05'
   '''
   return '{}{}'.format(DAY_PREFIX, pad_day(day))
 
-def get_year_dir(year: int) -> str:
+def get_year_id(year: int) -> str:
   '''
-  Gets the year directory name for a given year number.
+  Gets the year identifier for a given year number.
+
+  >>> get_year_id(2018)
+  'y2018'
   '''
   return '{}{}'.format(YEAR_PREFIX, year)
 
@@ -47,11 +51,10 @@ def get_latest_year() -> Optional[int]:
   Search the solutions directory for the latest year, and return it.
   Returns None if directory is empty.
   '''
-  solutions_dir_path = os.path.join(PROJECT_ROOT, SOLUTIONS_DIR_NAME)
   try:
     return max(
       int(entry[1:])
-      for entry in os.listdir(solutions_dir_path)
+      for entry in os.listdir(SOLUTIONS_ROOT)
       if re.fullmatch(r'y\d+', entry)
     )
   except ValueError:
@@ -59,14 +62,12 @@ def get_latest_year() -> Optional[int]:
 
 def get_input(year: int, day: int) -> str:
   '''
-  Loads an input.txt file into a string and returns it.
+  Loads an input file into a string and returns it.
   '''
   input_file_path = os.path.join(
-    PROJECT_ROOT,
-    SOLUTIONS_DIR_NAME,
-    get_year_dir(year),
-    get_day_dir(day),
-    INPUT_FILE_NAME
+    INPUTS_ROOT,
+    get_year_id(year),
+    '{}'.format(get_day_id(day))
   )
   if not os.path.isfile(input_file_path):
     raise Exception('Input file does not exist: {}'.format(input_file_path))
@@ -75,43 +76,42 @@ def get_input(year: int, day: int) -> str:
 
 def make_new_year(year: int) -> None:
   '''
-  Sets up solution and test directories for a new year of puzzle solutions.
+  Sets up input, solution, and test directories for a new year of puzzle solutions.
+  Only fails if the files already exist. Pre-existing directories are A-OK.
   '''
   if year < 2000:
     raise ValueError('Year must not be shorthand. E.g. "2018", not "18".')
 
-  year_dir = get_year_dir(year)
-  year_dir_path = os.path.join(PROJECT_ROOT, SOLUTIONS_DIR_NAME, year_dir)
-  os.mkdir(year_dir_path)
-  tests_year_dir_path = os.path.join(TESTS_ROOT, year_dir)
-  os.mkdir(tests_year_dir_path)
+  year_id = get_year_id(year)
+  inputs_year_dir_path = os.path.join(INPUTS_ROOT, year_id)
+  solutions_year_dir_path = os.path.join(SOLUTIONS_ROOT, year_id)
+  tests_year_dir_path = os.path.join(TESTS_ROOT, year_id)
+  os.makedirs(inputs_year_dir_path, exist_ok=True)
+  os.makedirs(solutions_year_dir_path, exist_ok=True)
+  os.makedirs(tests_year_dir_path, exist_ok=True)
 
   for day in range(1, 26):
-    day_dir = get_day_dir(day)
-    day_dir_path = os.path.join(year_dir_path, day_dir)
-    os.mkdir(day_dir_path)
-    solution_file_path = os.path.join(day_dir_path, SOLUTION_FILE_NAME)
+    day_id = get_day_id(day)
+    solution_file_path = os.path.join(solutions_year_dir_path, '{}.py'.format(day_id))
     with open(solution_file_path, 'x') as solution_file:
       solution_file.write(SOLUTION_FILE_TEMPLATE.format(day=day, year=year))
 
-    tests_day_dir_path = os.path.join(tests_year_dir_path, day_dir)
-    os.mkdir(tests_day_dir_path)
     # test file names must be unique for pytest to run them correctly
-    test_file_path = os.path.join(tests_day_dir_path, 'test_{}_{}_{}'.format(year, pad_day(day), SOLUTION_FILE_NAME))
+    test_file_path = os.path.join(tests_year_dir_path, 'test_{}_{}.py'.format(year, pad_day(day)))
     with open(test_file_path, 'x') as test_file:
       test_file.write(
-        TEST_FILE_TEMPLATE.format(day=day, year=year, zero_padded_day=pad_day(day), test_file_path=test_file_path)
+        TEST_FILE_TEMPLATE.format(day=day, year=year, zero_padded_day=pad_day(day))
       )
 
   print(highlight('Success.'))
   if shutil.which('tree') is not None:
-    print('Created the following directory trees:')
-    solutions_tree = subprocess.check_output(['tree', '-C', '--noreport', year_dir_path]).decode('utf8')
-    tests_tree = subprocess.check_output(['tree', '-C', '--noreport', tests_year_dir_path]).decode('utf8')
-    print(solutions_tree)
-    print('-' * 50)
-    print()
-    print(tests_tree)
+    trees = ('\n' + '-' * 50 + '\n\n').join(
+      subprocess.check_output(['tree', '-C', '--noreport', path]).decode('utf8')
+      for path in (inputs_year_dir_path, solutions_year_dir_path, tests_year_dir_path)
+    )
+    print('Created the following directories and files:')
+    print(trees)
   else:
-    print('Created {} and subdirectories + starter solution files.'.format(highlight(year_dir_path)))
-    print('Also created test directory {}.'.format(highlight(tests_year_dir_path)))
+    print('Created input directory {}.'.format(highlight(inputs_year_dir_path)))
+    print('Created solution directory {} and starter solution files.'.format(highlight(solutions_year_dir_path)))
+    print('Created test directory {} and starter test files.'.format(highlight(tests_year_dir_path)))
