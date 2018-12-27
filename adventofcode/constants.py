@@ -11,7 +11,7 @@ SOLUTIONS_DIR_NAME = 'solutions'
 YEAR_PREFIX = 'y'
 DAY_PREFIX = 'd'
 SOLUTION_FILE_NAME = 'solution.py'
-INPUT_FILE_NAME = 'input.txt'
+INPUT_FILE_NAME = 'input'
 
 SOLUTION_FILE_TEMPLATE = \
 """'''
