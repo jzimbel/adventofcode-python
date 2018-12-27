@@ -17,7 +17,7 @@ python -m adventofcode run [-y <year>] <day>
 
 ---
 
-To set up solution and test directories for a new year of puzzles, run
+To set up input, solution, and test directories for a new year of puzzles, run
 ```sh
 python -m adventofcode init [-y <year>]
 ```
