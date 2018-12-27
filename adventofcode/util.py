@@ -1,6 +1,3 @@
-import shutil
-import subprocess
-import sys
 import os
 import re
 from typing import Optional
@@ -9,10 +6,7 @@ from adventofcode.constants import (
   END_MARK,
   INPUTS_ROOT,
   MARK,
-  SOLUTION_FILE_TEMPLATE,
   SOLUTIONS_ROOT,
-  TEST_FILE_TEMPLATE,
-  TESTS_ROOT,
   YEAR_PREFIX
 )
 
@@ -53,7 +47,7 @@ def get_latest_year() -> Optional[int]:
   '''
   try:
     return max(
-      int(entry[1:])
+      int(entry.split(YEAR_PREFIX)[1])
       for entry in os.listdir(SOLUTIONS_ROOT)
       if re.fullmatch(r'y\d+', entry)
     )
@@ -66,52 +60,10 @@ def get_input(year: int, day: int) -> str:
   '''
   input_file_path = os.path.join(
     INPUTS_ROOT,
-    get_year_id(year),
-    '{}'.format(get_day_id(day))
+    str(year),
+    pad_day(day)
   )
   if not os.path.isfile(input_file_path):
     raise Exception('Input file does not exist: {}'.format(input_file_path))
   with open(input_file_path, 'r') as f:
     return f.read().strip()
-
-def make_new_year(year: int) -> None:
-  '''
-  Sets up input, solution, and test directories for a new year of puzzle solutions.
-  Only fails if the files already exist. Pre-existing directories are A-OK.
-  '''
-  if year < 2000:
-    raise ValueError('Year must not be shorthand. E.g. "2018", not "18".')
-
-  year_id = get_year_id(year)
-  inputs_year_dir_path = os.path.join(INPUTS_ROOT, year_id)
-  solutions_year_dir_path = os.path.join(SOLUTIONS_ROOT, year_id)
-  tests_year_dir_path = os.path.join(TESTS_ROOT, year_id)
-  os.makedirs(inputs_year_dir_path, exist_ok=True)
-  os.makedirs(solutions_year_dir_path, exist_ok=True)
-  os.makedirs(tests_year_dir_path, exist_ok=True)
-
-  for day in range(1, 26):
-    day_id = get_day_id(day)
-    solution_file_path = os.path.join(solutions_year_dir_path, '{}.py'.format(day_id))
-    with open(solution_file_path, 'x') as solution_file:
-      solution_file.write(SOLUTION_FILE_TEMPLATE.format(day=day, year=year))
-
-    # test file names must be unique for pytest to run them correctly
-    test_file_path = os.path.join(tests_year_dir_path, 'test_{}_{}.py'.format(year, pad_day(day)))
-    with open(test_file_path, 'x') as test_file:
-      test_file.write(
-        TEST_FILE_TEMPLATE.format(day=day, year=year, zero_padded_day=pad_day(day))
-      )
-
-  print(highlight('Success.'))
-  if shutil.which('tree') is not None:
-    trees = ('\n' + '-' * 50 + '\n\n').join(
-      subprocess.check_output(['tree', '-C', '--noreport', path]).decode('utf8')
-      for path in (inputs_year_dir_path, solutions_year_dir_path, tests_year_dir_path)
-    )
-    print('Created the following directories and files:')
-    print(trees)
-  else:
-    print('Created input directory {}.'.format(highlight(inputs_year_dir_path)))
-    print('Created solution directory {} and starter solution files.'.format(highlight(solutions_year_dir_path)))
-    print('Created test directory {} and starter test files.'.format(highlight(tests_year_dir_path)))
