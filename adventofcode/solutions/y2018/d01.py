@@ -16,12 +16,12 @@ def solution_2(changes: list) -> int:
 
   while len(repeated) == 0:
     for change in changes:
-      newFrequency = frequency + change
+      new_frequency = frequency + change
       frequency += change
-      if newFrequency in seen:
-        repeated.append(newFrequency)
+      if new_frequency in seen:
+        repeated.append(new_frequency)
         break
-      seen.add(newFrequency)
+      seen.add(new_frequency)
   return repeated[0]
 
 def run(data: str) -> Solution:
