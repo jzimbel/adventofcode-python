@@ -3,11 +3,7 @@ Solution for day 3 of the 2018 Advent of Code calendar.
 Run it with the command `python -m adventofcode run_solution -y 2018 3` from the project root.
 '''
 from typing import List, NamedTuple, Set
-from adventofcode.types import Solution
-
-class Cell(NamedTuple):
-  x: int
-  y: int
+from adventofcode.types import Solution, Point
 
 class Claim(NamedTuple):
   id: int
@@ -37,15 +33,15 @@ def do_claims_overlap(claim1: Claim, claim2: Claim) -> bool:
     and claim1.ymax > claim2.ymin
   )
 
-def get_overlapping_claim_cells(claim1: Claim, claim2: Claim) -> Set[Cell]:
-  claim1_cells = set(Cell(x, y) for x in range(claim1.xmin, claim1.xmax) for y in range(claim1.ymin, claim1.ymax))
-  claim2_cells = set(Cell(x, y) for x in range(claim2.xmin, claim2.xmax) for y in range(claim2.ymin, claim2.ymax))
+def get_overlapping_claim_cells(claim1: Claim, claim2: Claim) -> Set[Point]:
+  claim1_cells = set(Point(x, y) for x in range(claim1.xmin, claim1.xmax) for y in range(claim1.ymin, claim1.ymax))
+  claim2_cells = set(Point(x, y) for x in range(claim2.xmin, claim2.xmax) for y in range(claim2.ymin, claim2.ymax))
   return claim1_cells.intersection(claim2_cells)
 
 def solution_1(claims: List[Claim]) -> int:
   overlapping_cells = set()
   for i, claim1 in enumerate(claims):
-    print(len(overlapping_cells), 'overlapping cells found', end='\r')
+    print(len(overlapping_cells), 'square inches of overlap found', end='\r')
     for claim2 in claims[i+1:]:
       if do_claims_overlap(claim1, claim2):
         overlapping_cells.update(get_overlapping_claim_cells(claim1, claim2))
