@@ -2,8 +2,8 @@ import os
 import shutil
 import subprocess
 from datetime import date
+from typing import Tuple
 from adventofcode.constants import (
-  INPUTS_ROOT,
   SOLUTIONS_ROOT,
   TESTS_ROOT,
   SOLUTION_FILE_TEMPLATE,
@@ -17,17 +17,15 @@ from adventofcode.util import (
   highlight
 )
 
-def make_new_year(year: int) -> None:
+def make_new_year(year: int) -> Tuple[str, str]:
   '''
-  Sets up input, solution, and test directories for a new year of puzzle solutions.
+  Sets up solution and test directories for a new year of puzzle solutions.
   Only fails if the files already exist. Pre-existing directories are A-OK.
   '''
 
   year_id = get_year_id(year)
-  inputs_year_dir_path = os.path.join(INPUTS_ROOT, str(year))
   solutions_year_dir_path = os.path.join(SOLUTIONS_ROOT, year_id)
   tests_year_dir_path = os.path.join(TESTS_ROOT, year_id)
-  os.makedirs(inputs_year_dir_path, exist_ok=True)
   os.makedirs(solutions_year_dir_path, exist_ok=True)
   os.makedirs(tests_year_dir_path, exist_ok=True)
 
@@ -43,7 +41,7 @@ def make_new_year(year: int) -> None:
       test_file.write(
         TEST_FILE_TEMPLATE.format(day=day, year=year, zero_padded_day=pad_day(day))
       )
-  return (inputs_year_dir_path, solutions_year_dir_path, tests_year_dir_path)
+  return (solutions_year_dir_path, tests_year_dir_path)
 
 def run_make_new_year(args) -> None:
   year = args.year
@@ -64,7 +62,6 @@ def run_make_new_year(args) -> None:
     print('Created the following directories and files:')
     print(trees)
   else:
-    inputs_year_dir_path, solutions_year_dir_path, tests_year_dir_path = paths
-    print('Created input directory {}.'.format(highlight(inputs_year_dir_path)))
+    solutions_year_dir_path, tests_year_dir_path = paths
     print('Created solution directory {} and starter solution files.'.format(highlight(solutions_year_dir_path)))
     print('Created test directory {} and starter test files.'.format(highlight(tests_year_dir_path)))

@@ -18,7 +18,7 @@ If the input for the solution you're trying to run hasn't already been saved in 
 
 ---
 
-To set up input, solution, and test directories for a new year of puzzles, run
+To set up solution and test directories for a new year of puzzles, run
 ```sh
 python -m adventofcode init [-y <year>]
 ```
