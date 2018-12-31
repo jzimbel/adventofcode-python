@@ -1,12 +1,16 @@
 import os
 import re
+import requests
 from typing import Optional
 from adventofcode.constants import (
+  AOC_URL,
   DAY_PREFIX,
   END_MARK,
   INPUTS_ROOT,
-  MARK,
+  MARKS,
   SOLUTIONS_ROOT,
+  USER_AGENT,
+  USER_SESSION_ID_FILE_PATH,
   YEAR_PREFIX
 )
 
@@ -34,11 +38,11 @@ def get_year_id(year: int) -> str:
   '''
   return '{}{}'.format(YEAR_PREFIX, year)
 
-def highlight(text: str) -> str:
+def highlight(text: str, color: str='b') -> str:
   '''
   Surround a string in ANSI escape codes to make it stand out when printed.
   '''
-  return '{}{}{}'.format(MARK, text, END_MARK)
+  return '{}{}{}'.format(MARKS[color], text, END_MARK)
 
 def get_latest_year() -> Optional[int]:
   '''
@@ -54,6 +58,71 @@ def get_latest_year() -> Optional[int]:
   except ValueError:
     return None
 
+def get_user_session_id() -> str:
+  '''
+  Retrieves unique user session id from the file in the project, or asks the user to provide it if the file doesn't exist.
+  '''
+  if os.path.isfile(USER_SESSION_ID_FILE_PATH):
+    with open(USER_SESSION_ID_FILE_PATH) as f:
+      return f.read().strip()
+  else:
+    done = False
+    user_session_id = ''
+    print('What is your session id? It\'s needed for downloading puzzle inputs.')
+    print('Your id is the value of the cookie named "{}" on {}.'.format(highlight('session'), highlight(AOC_URL)))
+    while not done:
+      user_session_id = input('{} '.format(highlight('>', color='r')))
+      user_session_id = user_session_id.strip()
+      if re.fullmatch(r'[\da-f]+', user_session_id):
+        with open(USER_SESSION_ID_FILE_PATH, 'w') as f:
+          f.write(user_session_id)
+        done = True
+        print('Thanks.')
+      else:
+        print('That\'s not a valid id. It should consist only of digits and lowercase letters a-f. Please try again.')
+    return user_session_id
+
+def download_input(year: int, day: int, input_file_path: str) -> bool:
+  '''
+  Attempts to download and save the given input from the Advent of Code site.
+  Returns a boolean indicating success/failure.
+  '''
+  print('Input file', highlight(input_file_path, color='r'), 'does not exist.')
+  print('Attempting to download puzzle input from {}.'.format(highlight(AOC_URL)))
+  result = None
+  error_count = 0
+  while result is None:
+    try:
+      response = requests.get(
+        url='{}/{}/day/{}/input'.format(AOC_URL, year, day),
+        cookies={'session': get_user_session_id()},
+        headers={'User-Agent': USER_AGENT}
+      )
+      if response.ok:
+        with open(input_file_path, 'w') as f:
+          f.write(response.text)
+        print(highlight('Success.', color='g'), 'Input downloaded and saved to', '{}.'.format(highlight(input_file_path)))
+        result = True
+      else:
+        print('Server responded with a non-200 status code: {}.'.format(highlight(response.status_code, color='y')))
+        print('Aborting.')
+        result = False
+    except requests.exceptions.RequestException:
+      error_count += 1
+      if error_count >= 2:
+        print('Giving up.')
+        result = False
+      elif error_count == 0:
+        print('Error while requesting input from server. Request probably timed out. Trying again.')
+      else:
+        print('Trying again.')
+    except Exception as e:
+      print('Unhandled error while requesting input from server. ' + str(e))
+      result = False
+  print()
+  return result
+
+
 def get_input(year: int, day: int) -> str:
   '''
   Loads an input file into a string and returns it.
@@ -63,7 +132,7 @@ def get_input(year: int, day: int) -> str:
     str(year),
     pad_day(day)
   )
-  if not os.path.isfile(input_file_path):
-    raise Exception('Input file does not exist: {}'.format(input_file_path))
+  if not os.path.isfile(input_file_path) and not download_input(year, day, input_file_path):
+    raise Exception('Could not retrieve input for the puzzle.')
   with open(input_file_path, 'r') as f:
     return f.read().strip()

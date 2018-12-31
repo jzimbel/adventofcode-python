@@ -14,6 +14,7 @@ Once that's done, you can run solutions like so:
 ```sh
 python -m adventofcode run [-y <year>] <day>
 ```
+If the input for the solution you're trying to run hasn't already been saved in the `inputs` directory, the program will try to download it from the Advent of Code site first. If this is your first time downloading an input, you'll be asked to provide your unique session id. It's held in a cookie named `session` saved by the site--you can view it using your browser's dev tools or a number of cookie-viewing browser extensions.
 
 ---
 
@@ -33,5 +34,7 @@ PYTHONPATH=$(pwd) py.test
 # run a specific test
 PYTHONPATH=$(pwd) py.test path/to/test.py
 ```
+
+## Copy it
 
 If you like the setup I've got here, feel free to use it yourself. Or let me know if it's garbage! This is my first time making a proper Python project from scratch, so I'm sure it's not perfect. ¯\\\_(ツ)\_/¯

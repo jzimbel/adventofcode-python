@@ -55,7 +55,7 @@ def run_make_new_year(args) -> None:
 
   paths = make_new_year(year)
 
-  print(highlight('Success.'))
+  print(highlight('Success.', color='g'))
   if shutil.which('tree') is not None:
     trees = '\n'.join(
       subprocess.check_output(['tree', '-C', '--noreport', path]).decode('utf8')
