@@ -99,6 +99,7 @@ def download_input(year: int, day: int, input_file_path: str) -> bool:
         headers={'User-Agent': USER_AGENT}
       )
       if response.ok:
+        os.makedirs(os.path.dirname(input_file_path), exist_ok=True)
         with open(input_file_path, 'w') as f:
           f.write(response.text)
         print(highlight('Success.', color='g'), 'Input downloaded and saved to', '{}.'.format(highlight(input_file_path)))
