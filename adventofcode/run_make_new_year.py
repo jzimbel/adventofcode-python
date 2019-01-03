@@ -22,7 +22,6 @@ def make_new_year(year: int) -> Tuple[str, str]:
   Sets up solution and test directories for a new year of puzzle solutions.
   Only fails if the files already exist. Pre-existing directories are A-OK.
   '''
-
   year_id = get_year_id(year)
   solutions_year_dir_path = os.path.join(SOLUTIONS_ROOT, year_id)
   tests_year_dir_path = os.path.join(TESTS_ROOT, year_id)

@@ -1,7 +1,7 @@
 import os
 import re
 import requests
-from typing import Optional
+from typing import Optional, Any
 from adventofcode.constants import (
   AOC_URL,
   DAY_PREFIX,
@@ -38,9 +38,9 @@ def get_year_id(year: int) -> str:
   '''
   return '{}{}'.format(YEAR_PREFIX, year)
 
-def highlight(text: str, color: str='b') -> str:
+def highlight(text: Any, color: str='b') -> str:
   '''
-  Surround a string in ANSI escape codes to make it stand out when printed.
+  Surround a value in ANSI escape codes to make it stand out when printed.
   '''
   return '{}{}{}'.format(MARKS[color], text, END_MARK)
 
