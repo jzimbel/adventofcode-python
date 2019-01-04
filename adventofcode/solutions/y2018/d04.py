@@ -6,7 +6,7 @@ from typing import DefaultDict, List, NamedTuple
 from datetime import datetime
 from collections import defaultdict
 import re
-from functools import reduce
+from itertools import chain
 from operator import concat
 from adventofcode.types import Solution
 from adventofcode.util import highlight
@@ -62,16 +62,13 @@ def solution_1(records_by_guard_id: DefaultDict[int, List[int]]) -> int:
 
 def solution_2(records_by_guard_id: DefaultDict[int, List[int]]) -> int:
   # restructure records_by_guard_id into a flat list of (guard_id, minute, sleep_count) tuples
-  combined_records = reduce(
-    concat,
-    (
+  combined_records = chain(*(
       [
         (guard_id, minute, record)
         for minute, record in enumerate(records)
       ]
       for guard_id, records in records_by_guard_id.items()
-    )
-  )
+  ))
   sleepiest_minute_guard_id, sleepiest_minute, sleep_count = max(combined_records, key=lambda x: x[2])
   solution = sleepiest_minute_guard_id * sleepiest_minute
   print(
