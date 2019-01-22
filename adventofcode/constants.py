@@ -23,28 +23,28 @@ DAY_PREFIX = 'd'
 
 # starter file templates
 SOLUTION_FILE_TEMPLATE = \
-"""'''
+f"""'''
 Solution for day {{day}} of the {{year}} Advent of Code calendar.
-Run it with the command `python -m adventofcode {} -y {{year}} {{day}}` from the project root.
+Run it with the command `python -m adventofcode {COMMAND_RUN_SOLUTION} -y {{year}} {{day}}` from the project root.
 '''
 from adventofcode.types import Solution
 
 def run(data: str) -> Solution:
   # not yet implemented!
   return (None, None)
-""".format(COMMAND_RUN_SOLUTION)
+"""
 
 TEST_FILE_TEMPLATE = \
-"""'''
+f"""'''
 Test for year {{year}}, day {{day}} solution.
 Run tests from project root with `PYTHONPATH=$(pwd) py.test`.
 '''
-from adventofcode.{}.{}{{year}}.{}{{zero_padded_day}} import run
+from adventofcode.{SOLUTIONS_DIR_NAME}.{YEAR_PREFIX}{{year}}.{DAY_PREFIX}{{zero_padded_day}} import run
 
 def test_run() -> None:
   # not yet implemented!
   assert run('') == (None, None)
-""".format(SOLUTIONS_DIR_NAME, YEAR_PREFIX, DAY_PREFIX)
+"""
 
 # for highlighting sections of printed text
 MARKS = defaultdict(lambda: '\033[1;34m', {

@@ -27,7 +27,7 @@ def get_day_id(day: int) -> str:
   >>> get_day_id(5)
   'd05'
   '''
-  return '{}{}'.format(DAY_PREFIX, pad_day(day))
+  return f'{DAY_PREFIX}{pad_day(day)}'
 
 def get_year_id(year: int) -> str:
   '''
@@ -36,13 +36,13 @@ def get_year_id(year: int) -> str:
   >>> get_year_id(2018)
   'y2018'
   '''
-  return '{}{}'.format(YEAR_PREFIX, year)
+  return f'{YEAR_PREFIX}{year}'
 
 def highlight(text: Any, color: str='b') -> str:
   '''
   Surround a value in ANSI escape codes to make it stand out when printed.
   '''
-  return '{}{}{}'.format(MARKS[color], text, END_MARK)
+  return f'{MARKS[color]}{text}{END_MARK}'
 
 def get_latest_year() -> Optional[int]:
   '''
@@ -69,9 +69,9 @@ def get_user_session_id() -> str:
     done = False
     user_session_id = ''
     print('What is your session id? It\'s needed for downloading puzzle inputs.')
-    print('Your id is the value of the cookie named "{}" on {}.'.format(highlight('session'), highlight(AOC_URL)))
+    print('Your id is the value of the cookie named', highlight('session'), f'on {highlight(AOC_URL)}.')
     while not done:
-      user_session_id = input('{} '.format(highlight('>', color='r')))
+      user_session_id = input(f"{highlight('>', color='r')} ")
       user_session_id = user_session_id.strip()
       if re.fullmatch(r'[\da-f]+', user_session_id):
         with open(USER_SESSION_ID_FILE_PATH, 'w') as f:
@@ -88,13 +88,13 @@ def download_input(year: int, day: int, input_file_path: str) -> bool:
   Returns a boolean indicating success/failure.
   '''
   print('Input file', highlight(input_file_path, color='r'), 'does not exist.')
-  print('Attempting to download puzzle input from {}.'.format(highlight(AOC_URL)))
+  print(f'Attempting to download puzzle input from {highlight(AOC_URL)}.')
   result = None
   error_count = 0
   while result is None:
     try:
       response = requests.get(
-        url='{}/{}/day/{}/input'.format(AOC_URL, year, day),
+        url=f'{AOC_URL}/{year}/day/{day}/input',
         cookies={'session': get_user_session_id()},
         headers={'User-Agent': USER_AGENT}
       )
@@ -102,10 +102,10 @@ def download_input(year: int, day: int, input_file_path: str) -> bool:
         os.makedirs(os.path.dirname(input_file_path), exist_ok=True)
         with open(input_file_path, 'w') as f:
           f.write(response.text)
-        print(highlight('Success.', color='g'), 'Input downloaded and saved to', '{}.'.format(highlight(input_file_path)))
+        print(highlight('Success.', color='g'), 'Input downloaded and saved to', f'{highlight(input_file_path)}.')
         result = True
       else:
-        print('Server responded with a non-200 status code: {}.'.format(highlight(response.status_code, color='y')))
+        print('Server responded with a non-200 status code:', f"{highlight(response.status_code, color='y')}.")
         print('Aborting.')
         result = False
     except requests.exceptions.RequestException:

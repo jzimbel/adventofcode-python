@@ -51,13 +51,13 @@ def solution_1(records_by_guard_id: DefaultDict[int, List[int]]) -> int:
   indexed_minute_most_slept_by_that_guard = max(enumerate(records_by_guard_id[id_of_guard_that_sleeps_the_most]), key=lambda indexed_tuple: indexed_tuple[1])
   solution = id_of_guard_that_sleeps_the_most * indexed_minute_most_slept_by_that_guard[0]
   print(
-    'Guard #{} slept the most minutes ({}).'.format(highlight(id_of_guard_that_sleeps_the_most), highlight(total_minutes_slept_by_that_guard)),
-    'They spent minute 00:{}'.format(highlight(indexed_minute_most_slept_by_that_guard[0])),
+    f'Guard #{highlight(id_of_guard_that_sleeps_the_most)} slept the most minutes ({highlight(total_minutes_slept_by_that_guard)}).',
+    f'They spent minute 00:{highlight(indexed_minute_most_slept_by_that_guard[0])}',
     'sleeping most often--they were asleep during that minute on',
     highlight(indexed_minute_most_slept_by_that_guard[1]),
     'different days.'
   )
-  print('{} * {} = {}'.format(id_of_guard_that_sleeps_the_most, indexed_minute_most_slept_by_that_guard[0], highlight(solution, color='g')))
+  print(f"{id_of_guard_that_sleeps_the_most} * {indexed_minute_most_slept_by_that_guard[0]} = {highlight(solution, color='g')}")
   return solution
 
 def solution_2(records_by_guard_id: DefaultDict[int, List[int]]) -> int:
@@ -72,13 +72,13 @@ def solution_2(records_by_guard_id: DefaultDict[int, List[int]]) -> int:
   sleepiest_minute_guard_id, sleepiest_minute, sleep_count = max(combined_records, key=lambda x: x[2])
   solution = sleepiest_minute_guard_id * sleepiest_minute
   print(
-    'Guard #{} spent minute 00:{}'.format(highlight(sleepiest_minute_guard_id), highlight(sleepiest_minute)),
+    f'Guard #{highlight(sleepiest_minute_guard_id)} spent minute 00:{highlight(sleepiest_minute)}',
     'sleeping more than any other guard spent any other single minute sleeping.',
     'They were asleep during that minute on',
     highlight(sleep_count),
     'different days.'
   )
-  print('{} * {} = {}'.format(sleepiest_minute_guard_id, sleepiest_minute, highlight(solution, color='g')))
+  print(f"{sleepiest_minute_guard_id} * {sleepiest_minute} = {highlight(solution, color='g')}")
   return solution
 
 def run(data: str) -> Solution:

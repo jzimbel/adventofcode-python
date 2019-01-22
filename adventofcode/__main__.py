@@ -30,7 +30,7 @@ parser_init.add_argument(
   '--year',
   '-y',
   type=int,
-  help='Year to create. If not specified, the {} directory will be inspected and a year after the latest existing year will be created.'.format(SOLUTIONS_DIR_NAME)
+  help=f'Year to create. If not specified, the {SOLUTIONS_DIR_NAME} directory will be inspected and a year after the latest existing year will be created.'
 )
 parser_init.set_defaults(func=run_make_new_year)
 

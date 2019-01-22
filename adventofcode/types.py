@@ -26,4 +26,4 @@ def with_id(nt: NamedTuple) -> NamedTuple:
   >>> IDPoint(99, 3, 4)
   IDPoint(id=99, x=3, y=4)
   '''
-  return extend_named_tuple(nt, 'ID{}'.format(nt.__name__), [('id', int)], prepend_new_fields=True)
+  return extend_named_tuple(nt, f'ID{nt.__name__}', [('id', int)], prepend_new_fields=True)

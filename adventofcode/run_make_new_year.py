@@ -30,12 +30,12 @@ def make_new_year(year: int) -> Tuple[str, str]:
 
   for day in range(1, 26):
     day_id = get_day_id(day)
-    solution_file_path = os.path.join(solutions_year_dir_path, '{}.py'.format(day_id))
+    solution_file_path = os.path.join(solutions_year_dir_path, f'{day_id}.py')
     with open(solution_file_path, 'x') as solution_file:
       solution_file.write(SOLUTION_FILE_TEMPLATE.format(day=day, year=year))
 
     # test file names must be unique for pytest to run them correctly
-    test_file_path = os.path.join(tests_year_dir_path, 'test_{}_{}.py'.format(year, pad_day(day)))
+    test_file_path = os.path.join(tests_year_dir_path, f'test_{year}_{pad_day(day)}.py')
     with open(test_file_path, 'x') as test_file:
       test_file.write(
         TEST_FILE_TEMPLATE.format(day=day, year=year, zero_padded_day=pad_day(day))
@@ -62,5 +62,5 @@ def run_make_new_year(args) -> None:
     print(trees)
   else:
     solutions_year_dir_path, tests_year_dir_path = paths
-    print('Created solution directory {} and starter solution files.'.format(highlight(solutions_year_dir_path)))
-    print('Created test directory {} and starter test files.'.format(highlight(tests_year_dir_path)))
+    print(f'Created solution directory {highlight(solutions_year_dir_path)} and starter solution files.')
+    print(f'Created test directory {highlight(tests_year_dir_path)} and starter test files.')
