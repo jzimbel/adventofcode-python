@@ -3,7 +3,7 @@ Solution for day 8 of the 2018 Advent of Code calendar.
 Run it with the command `python -m adventofcode run_solution -y 2018 8` from the project root.
 '''
 from adventofcode.types import Solution
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 class Tree:
   def __init__(self, children: List['Tree'], metadata: List[int]) -> None:
@@ -12,7 +12,7 @@ class Tree:
     self._value = None
 
   @classmethod
-  def from_list(cls, tree_def: List[int], recursing: bool=False) -> Tuple['Tree', int]:
+  def from_list(cls, tree_def: List[int], recursing: bool=False) -> Union['Tree', Tuple['Tree', int]]:
     child_count, metadata_count = tree_def[:2]
     children = []
     index = 2
@@ -31,16 +31,15 @@ class Tree:
     return sum(child.sum_metadata() for child in self.children) + sum(self.metadata)
 
   def get_value(self):
-    if self._value is not None:
-      return self._value
-    self._value = 0
-    if len(self.children) == 0:
-      self._value = self.sum_metadata()
-    else:
-      for metadatum in self.metadata:
-        if metadatum == 0 or metadatum > len(self.children):
-          continue
-        self._value += self.children[metadatum - 1].get_value()
+    if self._value is None:
+      if len(self.children) == 0:
+        self._value = self.sum_metadata()
+      else:
+        self._value = sum(
+          self.children[metadatum - 1].get_value()
+          for metadatum in self.metadata
+          if metadatum != 0 and metadatum <=len(self.children)
+        )
     return self._value
 
 def solution_1(tree: Tree) -> int:
