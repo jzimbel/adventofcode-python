@@ -4,25 +4,25 @@ Run it with the command `python -m adventofcode run_solution -y 2018 1` from the
 '''
 from functools import reduce
 from operator import add
+from typing import List
 from adventofcode.types import Solution
 
-def solution_1(changes: list) -> int:
+def solution_1(changes: List[int]) -> int:
   return reduce(add, changes, 0)
 
-def solution_2(changes: list) -> int:
-  seen = set([0])
+def solution_2(changes: List[int]) -> int:
+  seen = {0}
   frequency = 0
-  repeated = []
+  done = False
 
-  while len(repeated) == 0:
+  while not done:
     for change in changes:
-      new_frequency = frequency + change
       frequency += change
-      if new_frequency in seen:
-        repeated.append(new_frequency)
+      if frequency in seen:
+        done = True
         break
-      seen.add(new_frequency)
-  return repeated[0]
+      seen.add(frequency)
+  return frequency
 
 def run(data: str) -> Solution:
   changes = [int(change) for change in data.split('\n')]
