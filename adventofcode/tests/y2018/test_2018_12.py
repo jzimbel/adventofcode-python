@@ -4,6 +4,24 @@ Run tests from project root with `PYTHONPATH=$(pwd) py.test`.
 '''
 from adventofcode.solutions.y2018.d12 import run
 
+data = '''
+initial state: #..#.#..##......###...###
+
+...## => #
+..#.. => #
+.#... => #
+.#.#. => #
+.#.## => #
+.##.. => #
+.#### => #
+#.#.# => #
+#.### => #
+##.#. => #
+##.## => #
+###.. => #
+###.# => #
+####. => #
+'''.strip()
+
 def test_run() -> None:
-  # not yet implemented!
-  assert run('') == (None, None)
+  assert run(data)[0] == 325
