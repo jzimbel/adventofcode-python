@@ -136,4 +136,5 @@ def get_input(year: int, day: int) -> str:
   if not os.path.isfile(input_file_path) and not download_input(year, day, input_file_path):
     raise Exception('Could not retrieve input for the puzzle.')
   with open(input_file_path, 'r') as f:
-    return f.read().strip()
+    # strip newline at end of file
+    return f.read()[:-1]
