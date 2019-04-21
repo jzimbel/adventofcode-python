@@ -55,7 +55,7 @@ class Cart:
     self.x += v.x
     self.y += v.y
     for other in others:
-      if self == other:
+      if self is not other and self == other:
         self.crashed = True
         other.crashed = True
         break
@@ -84,17 +84,16 @@ class Cart:
   def __lt__(self, other: Any) -> bool:
     return isinstance(other, Cart) and (self.y, self.x) < (other.y, other.x)
 
-def shared_solution(track_map: TrackMap, cart_descriptors: List[CartDescriptor]) -> str:
+def shared_solution(track_map: TrackMap, cart_descriptors: List[CartDescriptor]) -> Tuple[str, str]:
   carts = sorted(Cart(*descriptor) for descriptor in cart_descriptors)
   collision_location = None
   while len(carts) > 1:
-    numbered_carts = list(enumerate(carts))
-    for i, cart in numbered_carts:
+    for cart in carts:
       if cart.crashed:
         continue
       cart.move(
         track_map[cart.location],
-        (other for n, other in numbered_carts if n != i and not other.crashed)
+        (other for other in carts if not other.crashed)
       )
       if collision_location is None and cart.crashed:
         collision_location = cart.location
