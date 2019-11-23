@@ -1,6 +1,6 @@
 # Advent of Code solutions
 
-This project holds my solutions + utilities for **[Advent of Code](https://adventofcode.com/)** puzzles over the years.
+This project holds my Python solutions + utilities for **[Advent of Code](https://adventofcode.com/)** puzzles over the years.
 
 ## Run it
 
