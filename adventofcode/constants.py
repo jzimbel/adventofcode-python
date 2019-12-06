@@ -3,7 +3,7 @@ import os
 
 # for downloading puzzle inputs
 AOC_URL = 'https://adventofcode.com'
-USER_AGENT = 'advent_of_code_input_downloader_jzimbel'
+USER_AGENT = 'advent_of_code_python_input_downloader_jzimbel'
 
 # base directories and other file names
 SOLUTIONS_DIR_NAME = 'solutions'
